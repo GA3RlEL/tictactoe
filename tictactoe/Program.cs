@@ -13,14 +13,26 @@
                 while (isWinner)
                 {
                     PlayerTurn(1);
-                    if (CheckWinner(gameTable, 1))
+                    if(IsDraw(gameTable))
+                    {
+                        isWinner = false;
+                        playerWinner = 0;
+                        break;
+                    }
+                    else if (CheckWinner(gameTable, 1))
                     {
                         isWinner = false;
                         playerWinner = 1;
                         break;
                     }
                     PlayerTurn(2);
-                    if (CheckWinner(gameTable, 2))
+                    if (IsDraw(gameTable))
+                    {
+                        isWinner = false;
+                        playerWinner = 0;
+                        break;
+                    }
+                    else if (CheckWinner(gameTable, 2))
                     {
                         isWinner = false;
                         playerWinner = 2;
@@ -29,7 +41,10 @@
 
                 }
                 PrintGameTable(gameTable);
-                Console.WriteLine("Player {0} is winner", playerWinner);
+                if(playerWinner==0)
+                    Console.WriteLine("Draw!");
+                else
+                    Console.WriteLine("Player {0} is winner", playerWinner);
                 Console.WriteLine("Do you want to play again? type Y or N");
                 string playAgain = Console.ReadLine();
                 if (playAgain.ToUpper() == "Y")
@@ -44,6 +59,25 @@
             }
 
 
+        }
+
+        static bool IsDraw(string[,] table)
+        {
+            int playerOSign = 0, playerXSign = 0;
+            for (int i = 0; i < table.GetLength(0); i++)
+            {
+                for (int j = 0; j < table.GetLength(1); j++)
+                {
+                    if (table[i, j] == "O")
+                        playerOSign++;
+                    if (table[i, j] == "X")
+                        playerXSign++;
+                }
+            }
+            if (playerXSign + playerOSign == 9)
+                return true;
+            else
+                return false;
         }
 
         static bool CheckWinner(string[,] table, int player)
@@ -107,6 +141,7 @@
                 }
                 return false;
             }
+
 
             if (CheckdiagonalRL(table, playerSign) || CheckdiagonalLR(table, playerSign) || CheckHorizonal(table, playerSign) || CheckVerticaly(table, playerSign))
                 return true;
